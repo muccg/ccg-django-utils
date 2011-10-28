@@ -1,0 +1,8 @@
+setup.py
+ccg_django_extras.egg-info/PKG-INFO
+ccg_django_extras.egg-info/SOURCES.txt
+ccg_django_extras.egg-info/dependency_links.txt
+ccg_django_extras.egg-info/entry_points.txt
+ccg_django_extras.egg-info/not-zip-safe
+ccg_django_extras.egg-info/top_level.txt
+ccg/__init__.py
