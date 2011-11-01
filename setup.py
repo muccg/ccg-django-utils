@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys, os
 
 setup(name='ccg-django-extras',
-      version='0.1',
+      version='0.1.1',
       description='Extra CCG code for Django applications.',
       long_description='Extra code used by the Centre for Comparative Genomics in our Django applications.',
       classifiers=[], # see http://pypi.python.org/pypi?:action=list_classifiers
@@ -11,7 +11,7 @@ setup(name='ccg-django-extras',
       author_email='',
       url='http://code.google.com/p/ccg-django-extras/',
       license='GNU General Public License, version 2',
-      namespace_packages=['ccg'],
+      namespace_packages=['ccg', 'ccg.template', 'ccg.template.loaders'],
       packages=find_packages(exclude=['examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
