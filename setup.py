@@ -1,27 +1,20 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1'
-
 setup(name='ccg-django-extras',
-      version=version,
-      description="",
-      long_description="""\
-""",
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      version='0.1',
+      description='Extra CCG code for Django applications.',
+      long_description='Extra code used by the Centre for Comparative Genomics in our Django applications.',
+      classifiers=[], # see http://pypi.python.org/pypi?:action=list_classifiers
       keywords='',
-      author='',
+      author='Centre for Comparative Genomics',
       author_email='',
-      url='',
-      license='',
+      url='http://code.google.com/p/ccg-django-extras/',
+      license='GNU General Public License, version 2',
       namespace_packages=['ccg'],
-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      packages=find_packages(exclude=['examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=[
-          # -*- Extra requirements: -*-
-      ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
+      install_requires=[],
+      entry_points="",
       )
