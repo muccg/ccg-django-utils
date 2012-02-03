@@ -9,7 +9,7 @@ logger = logging.getLogger('stats')
 class StatsMiddleware(object):
 
     #config options
-    LOG_HANDLER_NAME = 'stats'
+    LOG_HANDLER_NAME = __name__ 
     LOG_AJAX_ONLY = False
     PATH_WHITELIST = [] #no entries means log everything
 
@@ -30,7 +30,6 @@ class StatsMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         # turn on debugging in db backend to capture time
         from django.conf import settings
-        
         if hasattr(settings, 'STATS_MIDDLEWARE_LOGGER'):
             self.LOG_HANDLER_NAME = settings.STATS_MIDDLEWARE_LOGGER
         if hasattr(settings, 'STATS_MIDDLEWARE_LOG_AJAX_ONLY'):    
