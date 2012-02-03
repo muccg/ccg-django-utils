@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys, os
 
 setup(name='ccg-extras',
-      version='0.1.3',
+      version='0.1.4',
       description='Extra CCG code for Django applications.',
       long_description='Extra code used by the Centre for Comparative Genomics in our Django applications.',
       classifiers=[], # see http://pypi.python.org/pypi?:action=list_classifiers
