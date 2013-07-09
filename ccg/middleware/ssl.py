@@ -5,7 +5,8 @@ __author__ = "Stephen Zabel - sjzabel@gmail.com"
 __contributors__ = "Jay Parlar - parlar@gmail.com"
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect, get_host
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http.HttpRequest import get_host
 
 SSL = 'SSL'
 
