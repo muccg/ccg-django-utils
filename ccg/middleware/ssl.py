@@ -6,7 +6,7 @@ __contributors__ = "Jay Parlar - parlar@gmail.com"
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
-from django.http.HttpRequest import get_host
+from django.http import HttpRequest
 
 SSL = 'SSL'
 
@@ -41,7 +41,7 @@ class SSLRedirect:
 
     def _redirect(self, request, secure):
         protocol = secure and "https" or "http"
-        host = get_host(request)
+        host = HttpRequest.get_host(request)
         
         # if we are being proxied use the default behavoir. Thus proxied servers will only work if outside the proxy they look like they are on standard ports.
         if 'HTTP_X_FORWARDED_HOST' not in request.META:
