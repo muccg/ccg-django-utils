@@ -15,7 +15,7 @@ def wsgibase():
 
 def url( relpath ):
         if len(wsgibasepath):
-            if relpath[0]=='/':
+            if relpath and relpath[0]=='/':
                     return "%s%s"%(wsgibasepath,relpath)
             else:
                     return "%s/%s"%(wsgibasepath,relpath)
