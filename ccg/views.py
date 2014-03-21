@@ -1,3 +1,5 @@
+
+
 def status_view(request):
     """Default project status page. Checks each status function and returns 200 OK if they all pass, else 500. The idea is not to leak any information about how things passed or failed, except for the name of the check function in case of failure or uncaught exception"""
     from django.conf import settings

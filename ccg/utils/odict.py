@@ -51,9 +51,7 @@ class odict(UserDict):
 
     def values(self):
         return map(self.get, self._keys)
-    
+
     def sort_keys(self,func):
         # sort the keys in order of a particular cmp function on each value.
         self._keys.sort(cmp=lambda x,y: func(self[x],self[y]))
-            
-

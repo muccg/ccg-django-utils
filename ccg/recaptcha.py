@@ -46,7 +46,7 @@ class RecaptchaWidget(Widget):
        height="300" width="500" frameborder="0"></iframe><br>
    <textarea name="recaptcha_challenge_field" rows="3" cols="40">
    </textarea>
-   <input type="hidden" name="recaptcha_response_field" 
+   <input type="hidden" name="recaptcha_response_field"
        value="manual_challenge">
 </noscript>''' % args
 
@@ -65,7 +65,7 @@ class RecaptchaField(Field):
     def __init__(self, remote_ip, *args, **kwargs):
         self.remote_ip = remote_ip
         super(RecaptchaField, self).__init__(*args, **kwargs)
-    
+
     def clean(self, value):
         value = super(RecaptchaField, self).clean(value)
         challenge, response = value
