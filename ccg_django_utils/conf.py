@@ -78,10 +78,17 @@ class EnvConfig(object):
         an exception.
         Values used by this function will likely come from a conf file in /etc.
         """
-        # fixme: use type of default to choose output type
-        setting = setting.upper()
+
+        # simple conversion of values to numbers or bool
+        if isinstance(default, (int, float)):
+            coerce = type(default)
+        elif isinstance(default, bool):
+            coerce = lambda v: v.tolower()[0:1] in ("1", "y", "t")
+        else:
+            coerce = lambda x: x
+
         try:
-            return os.environ[setting]
+            return coerce(self[setting])
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -89,6 +96,14 @@ class EnvConfig(object):
                 raise ImproperlyConfigured(error_msg)
             else:
                 return default
+
+    def __getitem__(self, setting):
+        # make settings case-insensitive
+        setting = setting.upper()
+        return os.environ[setting]
+
+    def getlist(self, setting, default=None):
+        return self.get(setting, default).split()
 
     def get_db_engine(self, setting, default):
         """
