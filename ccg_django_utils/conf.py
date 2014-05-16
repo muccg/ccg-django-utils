@@ -45,6 +45,7 @@ def setup_prod_env(project_name, config_file=None):
     os.environ.setdefault("SCRIPT_NAME", "/" + project_name)
 
     os.environ["PROJECT_NAME"] = project_name
+    os.environ["PRODUCTION"] = "1"
 
     # set up the environment with settings loaded from a config file.
     config_file = config_file or "/etc/%s/%s.conf" % (project_name, project_name)
@@ -96,7 +97,7 @@ class EnvConfig(object):
 
     def _get_setting(self, setting, default, conv):
         try:
-            val = self[setting]
+            return conv(self[setting])
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -104,7 +105,6 @@ class EnvConfig(object):
                 raise ImproperlyConfigured(error_msg)
             else:
                 return default
-        return conv(val)
 
     def __getitem__(self, setting):
         # make settings case-insensitive
