@@ -27,6 +27,7 @@ References:
 """
 
 import os
+import sys
 import ConfigParser
 import StringIO
 
@@ -62,7 +63,8 @@ def load_config(filename):
 
     try:
         config_text = "[%s]\n%s" % (section, open(filename).read())
-    except IOError:
+    except IOError as e:
+        sys.stderr.write("load_config: %s\n" % e)
         config_text = "[%s]\n" % section
 
     config = ConfigParser.ConfigParser()
@@ -80,15 +82,21 @@ class EnvConfig(object):
         """
 
         # simple conversion of values to numbers or bool
-        if isinstance(default, (int, float)):
-            coerce = type(default)
-        elif isinstance(default, bool):
-            coerce = lambda v: v.tolower()[0:1] in ("1", "y", "t")
+        if isinstance(default, bool):
+            conv = lambda v: v.lower()[0:1] in ("1", "y", "t")
+        elif isinstance(default, (int, float)):
+            conv = type(default)
         else:
-            coerce = lambda x: x
+            conv = lambda x: x
 
+        return self._get_setting(setting, default, conv)
+
+    def getlist(self, setting, default=None):
+        return self._get_setting(setting, default, lambda x: x.split())
+
+    def _get_setting(self, setting, default, conv):
         try:
-            return coerce(self[setting])
+            val = self[setting]
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -96,14 +104,15 @@ class EnvConfig(object):
                 raise ImproperlyConfigured(error_msg)
             else:
                 return default
+        return conv(val)
 
     def __getitem__(self, setting):
         # make settings case-insensitive
         setting = setting.upper()
         return os.environ[setting]
 
-    def getlist(self, setting, default=None):
-        return self.get(setting, default).split()
+    def __hasitem__(self, setting):
+        return setting.upper() in os.environ
 
     def get_db_engine(self, setting, default):
         """
