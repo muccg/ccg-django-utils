@@ -97,7 +97,7 @@ class EnvConfig(object):
 
     def _get_setting(self, setting, default, conv):
         try:
-            val = self[setting]
+            return conv(self[setting])
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -105,7 +105,6 @@ class EnvConfig(object):
                 raise ImproperlyConfigured(error_msg)
             else:
                 return default
-        return conv(val)
 
     def __getitem__(self, setting):
         # make settings case-insensitive
