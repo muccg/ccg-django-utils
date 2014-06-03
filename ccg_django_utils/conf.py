@@ -45,6 +45,7 @@ def setup_prod_env(project_name, config_file=None):
     os.environ.setdefault("SCRIPT_NAME", "/" + project_name)
 
     os.environ["PROJECT_NAME"] = project_name
+    os.environ["PRODUCTION"] = "1"
 
     # set up the environment with settings loaded from a config file.
     config_file = config_file or "/etc/%s/%s.conf" % (project_name, project_name)
