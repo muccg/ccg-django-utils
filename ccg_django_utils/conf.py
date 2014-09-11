@@ -28,8 +28,8 @@ References:
 
 import os
 import sys
-import ConfigParser
-import StringIO
+from six.moves.configparser import ConfigParser
+from six import StringIO
 
 __all__ = ["EnvConfig", "setup_prod_env", "setup_config_env"]
 
@@ -68,8 +68,8 @@ def load_config(filename):
         sys.stderr.write("load_config: %s\n" % e)
         config_text = "[%s]\n" % section
 
-    config = ConfigParser.ConfigParser()
-    config.readfp(StringIO.StringIO(config_text))
+    config = ConfigParser()
+    config.readfp(StringIO(config_text))
 
     return config.items(section)
 
