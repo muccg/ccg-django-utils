@@ -3,7 +3,8 @@ from django.forms.fields import Field
 from django.forms.forms import BaseForm, Form
 from django.forms import ValidationError
 from django.conf import settings
-import httplib, urllib
+import urllib.request, urllib.parse, urllib.error
+from . import http
 
 VERSION='me'
 
@@ -70,12 +71,12 @@ class RecaptchaField(Field):
         value = super(RecaptchaField, self).clean(value)
         challenge, response = value
         if not challenge:
-            raise ValidationError(u'An error occured with the CAPTCHA service. Please try again.')
+            raise ValidationError('An error occured with the CAPTCHA service. Please try again.')
         if not response:
-            raise ValidationError(u'Please enter the CAPTCHA solution.')
+            raise ValidationError('Please enter the CAPTCHA solution.')
         value = validate_recaptcha(self.remote_ip, challenge, response)
         if not value.get('result'):
-            raise ValidationError(u'An incorrect CAPTCHA solution was entered.')
+            raise ValidationError('An incorrect CAPTCHA solution was entered.')
         return value
 
 
@@ -92,7 +93,7 @@ class RecaptchaFieldPlaceholder(Field):
 
 class RecaptchaBaseForm(BaseForm):
     def __init__(self, remote_ip, *args, **kwargs):
-        for key, field in self.base_fields.items():
+        for key, field in list(self.base_fields.items()):
             if isinstance(field, RecaptchaFieldPlaceholder):
                 self.base_fields[key] = RecaptchaField(remote_ip, *field.args, **field.kwargs)
         super(RecaptchaBaseForm, self).__init__(*args, **kwargs)
@@ -105,12 +106,12 @@ class RecaptchaForm(RecaptchaBaseForm, Form):
 def validate_recaptcha(remote_ip, challenge, response):
     # Request validation from recaptcha.net
     if challenge:
-        params = urllib.urlencode(dict(privatekey=settings.RECAPTCHA_PRIVATE_KEY,
+        params = urllib.parse.urlencode(dict(privatekey=settings.RECAPTCHA_PRIVATE_KEY,
                                        remoteip=remote_ip,
                                        challenge=challenge,
                                        response=response))
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = httplib.HTTPConnection("api-verify.recaptcha.net")
+        conn = http.client.HTTPConnection("api-verify.recaptcha.net")
         conn.request("POST", "/verify", params, headers)
         response = conn.getresponse()
         if response.status == 200:

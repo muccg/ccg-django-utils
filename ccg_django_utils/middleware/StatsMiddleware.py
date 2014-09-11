@@ -4,6 +4,7 @@ from operator import add
 from time import time
 from django.db import connection
 import logging
+from functools import reduce
 logger = logging.getLogger('stats')
 
 class StatsMiddleware(object):

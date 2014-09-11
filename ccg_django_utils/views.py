@@ -1,3 +1,4 @@
+import collections
 
 
 def status_view(request):
@@ -8,7 +9,7 @@ def status_view(request):
         # perform checks
         result = True
         for check in settings.STATUS_CHECKS:
-            if callable(check):
+            if isinstance(check, collections.Callable):
                 try:
                     result &= check(request)
                 except:
