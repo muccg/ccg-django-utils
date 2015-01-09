@@ -33,11 +33,13 @@ from six import StringIO
 
 __all__ = ["EnvConfig", "setup_prod_env", "setup_config_env"]
 
-def setup_prod_env(project_name, config_file=None):
+def setup_prod_env(project_name, config_file=None, package_name=None):
     """
     Sets environment variables for the web app according to conventions.
     """
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '%s.prodsettings' % project_name)
+    package_name = package_name or project_name
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '%s.prodsettings' % package_name)
     os.environ.setdefault('PYTHON_EGG_CACHE', '/tmp/.python-eggs')
 
     # ccg.utils.webhelpers expects SCRIPT_NAME to be a path such as /project-name
