@@ -97,6 +97,16 @@ class EnvConfig(object):
     def getlist(self, setting, default=None):
         return self._get_setting(setting, default, lambda x: x.split())
 
+    """
+    Gets a setting string from the environment like EnvConfig.get()
+    and then removes it from the environment.
+    This is prevent leaking of passwords, etc.
+    """
+    def get_secret(self, setting, default=None):
+        value = self._get_setting(setting, default, lambda x: x)
+        del self[setting]
+        return value
+
     def _get_setting(self, setting, default, conv):
         try:
             return conv(self[setting])
@@ -115,6 +125,11 @@ class EnvConfig(object):
 
     def __hasitem__(self, setting):
         return setting.upper() in os.environ
+
+    def __delitem__(self, setting):
+        setting = setting.upper()
+        if setting in os.environ:
+            del os.environ[setting]
 
     def get_db_engine(self, setting, default):
         """
