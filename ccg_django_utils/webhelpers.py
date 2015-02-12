@@ -5,8 +5,12 @@
 import os
 from django.conf import settings
 
+# SCRIPT_NAME is searched for legacy reasons, typically header will be
+# HTTP_SCRIPT_NAME and make its way to environ via the wsgi script
 if 'SCRIPT_NAME' in os.environ:
-    wsgibasepath=os.environ['SCRIPT_NAME']
+    wsgibasepath = os.environ['SCRIPT_NAME']
+elif 'HTTP_SCRIPT_NAME' in os.environ:
+    wsgibasepath = os.environ['HTTP_SCRIPT_NAME']
 else:
     wsgibasepath=''
 
