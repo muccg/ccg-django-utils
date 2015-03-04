@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys, os
 
 setup(name='ccg-django-utils',
-      version='0.3.1',
+      version='0.3.2',
       description='Extra CCG code for Django applications.',
       long_description='Extra code used by the Centre for Comparative Genomics in our Django applications.',
       classifiers=[], # see http://pypi.python.org/pypi?:action=list_classifiers
@@ -14,5 +14,5 @@ setup(name='ccg-django-utils',
       packages=find_packages(exclude=['examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      install_requires=[],
+      install_requires=['six'],
       )

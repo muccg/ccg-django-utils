@@ -28,16 +28,18 @@ References:
 
 import os
 import sys
-import ConfigParser
-import StringIO
+from six.moves.configparser import ConfigParser
+from six import StringIO
 
 __all__ = ["EnvConfig", "setup_prod_env", "setup_config_env"]
 
-def setup_prod_env(project_name, config_file=None):
+def setup_prod_env(project_name, config_file=None, package_name=None):
     """
     Sets environment variables for the web app according to conventions.
     """
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '%s.prodsettings' % project_name)
+    package_name = package_name or project_name
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', '%s.prodsettings' % package_name)
     os.environ.setdefault('PYTHON_EGG_CACHE', '/tmp/.python-eggs')
 
     # ccg.utils.webhelpers expects SCRIPT_NAME to be a path such as /project-name
@@ -68,8 +70,8 @@ def load_config(filename):
         sys.stderr.write("load_config: %s\n" % e)
         config_text = "[%s]\n" % section
 
-    config = ConfigParser.ConfigParser()
-    config.readfp(StringIO.StringIO(config_text))
+    config = ConfigParser()
+    config.readfp(StringIO(config_text))
 
     return config.items(section)
 
@@ -95,6 +97,16 @@ class EnvConfig(object):
     def getlist(self, setting, default=None):
         return self._get_setting(setting, default, lambda x: x.split())
 
+    """
+    Gets a setting string from the environment like EnvConfig.get()
+    and then removes it from the environment.
+    This is prevent leaking of passwords, etc.
+    """
+    def get_secret(self, setting, default=None):
+        value = self._get_setting(setting, default, lambda x: x)
+        del self[setting]
+        return value
+
     def _get_setting(self, setting, default, conv):
         try:
             return conv(self[setting])
@@ -113,6 +125,11 @@ class EnvConfig(object):
 
     def __hasitem__(self, setting):
         return setting.upper() in os.environ
+
+    def __delitem__(self, setting):
+        setting = setting.upper()
+        if setting in os.environ:
+            del os.environ[setting]
 
     def get_db_engine(self, setting, default):
         """
