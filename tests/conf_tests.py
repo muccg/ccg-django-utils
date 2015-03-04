@@ -70,3 +70,6 @@ dbname=pgsql
         messages = sys.stderr.read()
         sys.stderr = old
         self.assertTrue(messages.startswith("load_config"))
+
+if __name__ == '__main__':
+    unittest.main()
