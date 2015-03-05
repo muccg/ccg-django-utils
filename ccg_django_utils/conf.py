@@ -80,6 +80,20 @@ def load_config(filename):
 envconfig_stash = {}
 
 class EnvConfig(object):
+    def __init__(self):
+        self._in_runserver = self.detect_runserver()
+
+    def detect_runserver(self):
+        """
+        A bit of a hack: the environment cleaning breaks in runserver
+        mode when autoreload is active. So we need to be able to detect
+        when we're in runserver mode.
+        """
+        for arg in sys.argv[1:]:
+            if arg.startswith('runserver'):
+                return True
+        return False
+
     def get(self, setting, default=None, delete=True):
         """
         Get the environment setting, return a default value, or raise
@@ -107,13 +121,14 @@ class EnvConfig(object):
         def _get_raw():
             if setting in envconfig_stash:
                 return envconfig_stash[setting]
-            raw = self[setting]
+            raw = self._get_from_environ(setting)
             if delete:
                 envconfig_stash[setting] = raw
-                del self[setting]
+                self._delete_from_environ(setting)
             return raw
         try:
-            return conv(_get_raw())
+            r = conv(_get_raw())
+            return r
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -122,15 +137,14 @@ class EnvConfig(object):
             else:
                 return default
 
-    def __getitem__(self, setting):
+    def _get_from_environ(self, setting):
         # make settings case-insensitive
         setting = setting.upper()
         return os.environ[setting]
 
-    def __hasitem__(self, setting):
-        return setting.upper() in os.environ
-
-    def __delitem__(self, setting):
+    def _delete_from_environ(self, setting):
+        if self._in_runserver:
+            return
         setting = setting.upper()
         if setting in os.environ:
             del os.environ[setting]
