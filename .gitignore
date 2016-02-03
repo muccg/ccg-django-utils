@@ -1,0 +1,4 @@
+dist/
+ccg_django_utils.egg-info/
+.tox/
+.coverage
