@@ -2,13 +2,13 @@ import os
 import sys
 import unittest
 import tempfile
-from StringIO import StringIO
+from io import StringIO
 
 from ccg_django_utils.conf import *
 
 class SetupProdEnvTests(unittest.TestCase):
     def setup_test_file(self):
-        conf = tempfile.NamedTemporaryFile(delete=False)
+        conf = tempfile.NamedTemporaryFile(delete=False, mode="w")
         conf.write("""
 qwerty=asdf
 asdf = 42
