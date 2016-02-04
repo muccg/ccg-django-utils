@@ -75,33 +75,13 @@ def load_config(filename):
 
     return config.items(section)
 
-# global stash of environment variables which we have taken out of the
-# environment, but which we may still need to be able to access later
-envconfig_stash = {}
-
 class EnvConfig(object):
-    def __init__(self):
-        self._in_runserver = self.detect_runserver()
 
-    def detect_runserver(self):
-        """
-        A bit of a hack: the environment cleaning breaks in runserver
-        mode when autoreload is active. So we need to be able to detect
-        when we're in runserver mode.
-        """
-        for arg in sys.argv[1:]:
-            if arg.startswith('runserver'):
-                return True
-        return False
-
-    def get(self, setting, default=None, delete=True):
+    def get(self, setting, default=None):
         """
         Get the environment setting, return a default value, or raise
         an exception.
         Values used by this function will likely come from a conf file in /etc.
-
-        If 'delete' is True (the default), the setting is deleted from the
-        environment to avoid data leaks.
         """
 
         # simple conversion of values to numbers or bool
@@ -112,23 +92,14 @@ class EnvConfig(object):
         else:
             conv = lambda x: x
 
-        return self._get_setting(setting, default, conv, delete)
+        return self._get_setting(setting, default, conv)
 
-    def getlist(self, setting, default=None, delete=True):
-        return self._get_setting(setting, default, lambda x: x.split(), delete)
+    def getlist(self, setting, default=None):
+        return self._get_setting(setting, default, lambda x: x.split())
 
-    def _get_setting(self, setting, default, conv, delete):
-        def _get_raw():
-            if setting in envconfig_stash:
-                return envconfig_stash[setting]
-            raw = self._get_from_environ(setting)
-            if delete:
-                envconfig_stash[setting] = raw
-                self._delete_from_environ(setting)
-            return raw
+    def _get_setting(self, setting, default, conv):
         try:
-            r = conv(_get_raw())
-            return r
+            return conv(self[setting])
         except KeyError:
             if default is None:
                 from django.core.exceptions import ImproperlyConfigured
@@ -137,14 +108,15 @@ class EnvConfig(object):
             else:
                 return default
 
-    def _get_from_environ(self, setting):
+    def __getitem__(self, setting):
         # make settings case-insensitive
         setting = setting.upper()
         return os.environ[setting]
 
-    def _delete_from_environ(self, setting):
-        if self._in_runserver:
-            return
+    def __hasitem__(self, setting):
+        return setting.upper() in os.environ
+
+    def __delitem__(self, setting):
         setting = setting.upper()
         if setting in os.environ:
             del os.environ[setting]
