@@ -4,7 +4,7 @@ python:
   - "3.5"
 env:
   global:
-    - COVERAGE=1 RUNTEST_ARGS="-v --noinput"
+    - COVERAGE=1 RUNTEST_ARGS="-v"
   matrix:
     # Quality checks
     - TOXENV=flake8

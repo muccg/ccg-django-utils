@@ -1,6 +1,6 @@
 # CCG Django Utils
 
-[![Build Status](https://travis-ci.org/muccg/django-useraudit.svg)](https://travis-ci.org/muccg/ccg-django-utils) [![PyPI](https://badge.fury.io/py/ccg-django-utils.svg)](https://pypi.python.org/pypi/ccg-django-utils)
+[![Build Status](https://travis-ci.org/muccg/ccg-django-utils.svg)](https://travis-ci.org/muccg/ccg-django-utils) [![PyPI](https://badge.fury.io/py/ccg-django-utils.svg)](https://pypi.python.org/pypi/ccg-django-utils)
 
 Miscellaneous utility code used by the [Centre for Comparative
 Genomics] [1] in our Django applications.
