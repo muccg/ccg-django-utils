@@ -26,6 +26,7 @@ References:
 
 """
 
+from __future__ import unicode_literals
 import os
 import sys
 from six.moves.configparser import ConfigParser
