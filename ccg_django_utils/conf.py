@@ -132,5 +132,6 @@ class EnvConfig(object):
             'pgsql': 'django.db.backends.postgresql_psycopg2',
             'mysql': 'django.db.backends.mysql',
             'sqlite3': 'django.db.backends.sqlite3',
+            'postgis': 'django.contrib.gis.db.backends.postgis',
         }
         return engines.get(self.get(setting, ""), engines[default])
