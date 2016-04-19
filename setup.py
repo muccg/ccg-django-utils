@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ccg-django-utils',
-      version='0.4.1',
+      version='0.4.2',
       description='Extra CCG code for Django applications.',
       long_description='Extra code used by the Centre for Comparative Genomics in our Django applications.',
       classifiers=[
